@@ -19,7 +19,7 @@
 
         <!-- Stat cards -->
         <div class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-            <StatCard label="Nodes Online" value="8" unit="/ 10" :trend="0" iconBg="bg-[#e8f5f3]">
+            <StatCard label="Nodes Online" value="2" unit="/ 2" :trend="0" iconBg="bg-[#e8f5f3]">
                 <template #icon>
                     <svg class="w-4 h-4 text-[#1a7f72]" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                         <circle cx="8" cy="8" r="2"/><circle cx="2.5" cy="4" r="1.5"/><circle cx="13.5" cy="4" r="1.5"/>
@@ -81,8 +81,8 @@
                         >{{ r }}</button>
                     </div>
                 </div>
-                <!-- Chart area placeholder — swap with Chart.js / ECharts component -->
-                <div class="relative h-44 flex items-end gap-px px-1">
+                <!-- Chart area -->
+                <div class="relative h-48 flex items-end gap-px px-1">
                     <div
                         v-for="(bar, i) in chartBars" :key="i"
                         :style="{ height: bar.h + '%' }"
@@ -99,15 +99,15 @@
             </div>
 
             <!-- Recent alerts -->
-            <div class="bg-white rounded-xl border border-[#e4e2db] p-5">
+            <div class="bg-white rounded-xl border border-[#e4e2db] p-5 flex flex-col min-h-0">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-[14px] font-600 text-[#1c1c1a]">Alerts</h2>
-                    <span class="text-[11px] text-[#1a7f72] font-500 cursor-pointer hover:underline">View all</span>
+                    <router-link to="/alerts" class="text-[11px] text-[#1a7f72] font-500 hover:underline">View all</router-link>
                 </div>
-                <div class="flex flex-col gap-2">
+                <div class="flex flex-col gap-2 overflow-hidden">
                     <div
-                        v-for="alert in alerts" :key="alert.id"
-                        :class="['rounded-lg px-3 py-2.5 border text-[12.5px]', alert.type === 'critical' ? 'bg-red-50 border-red-100' : 'bg-amber-50 border-amber-100']"
+                        v-for="(alert, i) in alerts.slice(0, 3)" :key="alert.id"
+                        :class="['rounded-lg px-3 py-2.5 border text-[12.5px] transition-all', alert.type === 'critical' ? 'bg-red-50 border-red-100' : 'bg-amber-50 border-amber-100', i === 2 ? 'opacity-mask' : '']"
                     >
                         <div class="flex items-center gap-1.5 mb-0.5">
                             <span :class="['w-1.5 h-1.5 rounded-full flex-shrink-0', alert.type === 'critical' ? 'bg-red-400' : 'bg-amber-400']"></span>
@@ -125,7 +125,7 @@
         <div class="bg-white rounded-xl border border-[#e4e2db] p-5">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-[14px] font-600 text-[#1c1c1a]">Node Status</h2>
-                <router-link to="/nodes" class="text-[11px] text-[#1a7f72] font-500 hover:underline">Manage nodes →</router-link>
+                <router-link to="/nodes" class="text-[11px] text-[#1a7f72] font-500 hover:underline">Manage nodes</router-link>
             </div>
             <!-- Table header -->
             <div class="flex items-center gap-4 px-4 pb-2 border-b border-[#f0efe9] text-[11px] font-500 text-[#a09f99] uppercase tracking-wider">
@@ -160,20 +160,30 @@ const chartBars = Array.from({ length: 48 }, (_, i) => ({
 }))
 
 const alerts = [
-    { id: 1, type: 'critical', message: 'Temperature exceeded 40°C threshold', node: 'NODE-003', time: '2m ago' },
-    { id: 2, type: 'warning',  message: 'Signal RSSI below -110 dBm', node: 'NODE-007', time: '18m ago' },
+    { id: 1, type: 'critical', message: 'Temperature exceeded 40°C threshold', node: 'NODE-002', time: '5m ago' },
+    { id: 2, type: 'warning',  message: 'Signal RSSI below -110 dBm', node: 'NODE-002', time: '18m ago' },
+    { id: 3, type: 'warning',  message: 'Signal RSSI below -110 dBm', node: 'NODE-002', time: '25m ago' },
 ]
 
 const nodes = [
-    { id: 'N-001', name: 'Greenhouse Alpha',  temp: 23.1, status: 'online',  lastSeen: 'Just now', spark: '0,18 10,14 20,16 32,10 44,13 54,8 64,12' },
-    { id: 'N-002', name: 'Warehouse East',    temp: 19.8, status: 'online',  lastSeen: '1m ago',   spark: '0,14 10,16 20,12 32,18 44,14 54,16 64,13' },
-    { id: 'N-003', name: 'Rooftop Sensor',    temp: 40.2, status: 'warning', lastSeen: '2m ago',   spark: '0,20 10,18 20,15 32,12 44,8  54,4  64,2'  },
-    { id: 'N-004', name: 'Server Room',       temp: 22.5, status: 'online',  lastSeen: '1m ago',   spark: '0,12 10,13 20,12 32,14 44,12 54,13 64,12' },
-    { id: 'N-005', name: 'Cold Storage',      temp: 4.1,  status: 'online',  lastSeen: '3m ago',   spark: '0,10 10,11 20,10 32,11 44,10 54,10 64,11' },
-    { id: 'N-006', name: 'Parking Lot B',     temp: 17.3, status: 'online',  lastSeen: '4m ago',   spark: '0,15 10,14 20,16 32,15 44,16 54,14 64,15' },
-    { id: 'N-007', name: 'Gateway Node',      temp: 28.9, status: 'warning', lastSeen: '18m ago',  spark: '0,10 10,12 20,14 32,16 44,17 54,18 64,20' },
-    { id: 'N-008', name: 'Field Station',     temp: 21.0, status: 'online',  lastSeen: '2m ago',   spark: '0,14 10,15 20,13 32,14 44,15 54,13 64,14' },
-    { id: 'N-009', name: 'Pump House',        temp: 25.4, status: 'online',  lastSeen: '5m ago',   spark: '0,13 10,14 20,15 32,13 44,14 54,15 64,13' },
-    { id: 'N-010', name: 'Solar Array',       temp: 0,    status: 'offline', lastSeen: '2h ago',   spark: '0,12 10,12 20,12 32,12 44,12 54,12 64,12' },
+    { id: 'N-001', name: 'Server Room',  temp: 23.1, status: 'online',  lastSeen: 'Just now', spark: '0,18 10,14 20,16 32,10 44,13 54,8 64,12' },
+    { id: 'N-002', name: 'Battery Array',    temp: 19.8, status: 'warning',  lastSeen: '1m ago',   spark: '0,14 10,16 20,12 32,18 44,14 54,16 64,13' },
+    // { id: 'N-001', name: 'Greenhouse Alpha',  temp: 23.1, status: 'online',  lastSeen: 'Just now', spark: '0,18 10,14 20,16 32,10 44,13 54,8 64,12' },
+    // { id: 'N-002', name: 'Warehouse East',    temp: 19.8, status: 'online',  lastSeen: '1m ago',   spark: '0,14 10,16 20,12 32,18 44,14 54,16 64,13' },
+    // { id: 'N-003', name: 'Rooftop Sensor',    temp: 40.2, status: 'warning', lastSeen: '2m ago',   spark: '0,20 10,18 20,15 32,12 44,8  54,4  64,2'  },
+    // { id: 'N-004', name: 'Server Room',       temp: 22.5, status: 'online',  lastSeen: '1m ago',   spark: '0,12 10,13 20,12 32,14 44,12 54,13 64,12' },
+    // { id: 'N-005', name: 'Cold Storage',      temp: 4.1,  status: 'online',  lastSeen: '3m ago',   spark: '0,10 10,11 20,10 32,11 44,10 54,10 64,11' },
+    // { id: 'N-006', name: 'Parking Lot B',     temp: 17.3, status: 'online',  lastSeen: '4m ago',   spark: '0,15 10,14 20,16 32,15 44,16 54,14 64,15' },
+    // { id: 'N-007', name: 'Gateway Node',      temp: 28.9, status: 'warning', lastSeen: '18m ago',  spark: '0,10 10,12 20,14 32,16 44,17 54,18 64,20' },
+    // { id: 'N-008', name: 'Field Station',     temp: 21.0, status: 'online',  lastSeen: '2m ago',   spark: '0,14 10,15 20,13 32,14 44,15 54,13 64,14' },
+    // { id: 'N-009', name: 'Pump House',        temp: 25.4, status: 'online',  lastSeen: '5m ago',   spark: '0,13 10,14 20,15 32,13 44,14 54,15 64,13' },
+    // { id: 'N-010', name: 'Solar Array',       temp: 0,    status: 'offline', lastSeen: '2h ago',   spark: '0,12 10,12 20,12 32,12 44,12 54,12 64,12' },
 ]
 </script>
+
+<style scoped>
+.opacity-mask {
+  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+</style>

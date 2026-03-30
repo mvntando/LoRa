@@ -11,7 +11,7 @@
 
         <!-- Temp -->
         <div class="flex items-baseline gap-0.5 w-20 flex-shrink-0">
-            <span class="font-mono text-[14px] font-500 text-[#1c1c1a]">{{ node.temp }}</span>
+            <span class="font-mono text-[14px] font-500 text-[#1c1c1a]">{{ node.temp.toFixed(1) }}</span>
             <span class="text-[11px] text-[#a09f99]">°C</span>
         </div>
 
