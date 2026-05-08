@@ -13,13 +13,13 @@
                     <circle cx="7" cy="7" r="2.5"/>
                 </svg>
                 Live
-                <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e]"></span>
             </button>
         </div>
 
         <!-- Stat cards -->
         <div class="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
-            <StatCard label="Nodes Online" value="2" unit="/ 2" :trend="0" iconBg="bg-[#e8f5f3]">
+            <StatCard label="Nodes Online" value="2" unit="/ 3" :trend="0" iconBg="bg-[#e8f5f3]">
                 <template #icon>
                     <svg class="w-4 h-4 text-[#1a7f72]" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                         <circle cx="8" cy="8" r="2"/><circle cx="2.5" cy="4" r="1.5"/><circle cx="13.5" cy="4" r="1.5"/>
@@ -32,13 +32,14 @@
 
             <StatCard label="Avg Temperature" value="23.4" unit="°C" :trend="1.2" iconBg="bg-orange-50">
                 <template #icon>
-                    <svg class="w-4 h-4 text-orange-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                        <path d="M8 2v7.5"/><circle cx="8" cy="11.5" r="2.5"/><path d="M10.5 4.5h1M10.5 6.5h1M10.5 8.5h1" stroke-width="1.2"/>
+                    <svg fill="currentColor" class="w-4 h-4 text-orange-400" viewBox="0 0 16 16">
+                        <path d="M9.5 12.5a1.5 1.5 0 1 1-2-1.415V6.5a.5.5 0 0 1 1 0v4.585a1.5 1.5 0 0 1 1 1.415"/>
+                        <path d="M5.5 2.5a2.5 2.5 0 0 1 5 0v7.55a3.5 3.5 0 1 1-5 0zM8 1a1.5 1.5 0 0 0-1.5 1.5v7.987l-.167.15a2.5 2.5 0 1 0 3.333 0l-.166-.15V2.5A1.5 1.5 0 0 0 8 1"/>
                     </svg>
                 </template>
             </StatCard>
 
-            <StatCard label="Packets Today" value="14,882" :trend="5.3" iconBg="bg-blue-50">
+            <StatCard label="Packets Today" value="4,882" :trend="5.3" iconBg="bg-blue-50">
                 <template #icon>
                     <svg class="w-4 h-4 text-blue-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                         <path d="M1 11l4-4 3 3 3-4 4 3"/><path d="M1 5h14"/>
@@ -46,7 +47,7 @@
                 </template>
             </StatCard>
 
-            <StatCard label="Active Alerts" value="2" iconBg="bg-red-50">
+            <StatCard label="Active Alerts" :value="alerts.length" iconBg="bg-red-50">
                 <template #icon>
                     <svg class="w-4 h-4 text-red-400" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M8 1.5L1 13.5h14L8 1.5z"/>
@@ -56,7 +57,7 @@
                 </template>
                 <template #extra>
                     <div class="flex gap-2">
-                        <span class="text-[11px] bg-red-50 text-red-500 font-500 px-2 py-0.5 rounded-full">1 critical</span>
+                        <span class="text-[11px] bg-red-50 text-red-500 font-500 px-2 py-0.5 rounded-full">2 critical</span>
                         <span class="text-[11px] bg-amber-50 text-amber-500 font-500 px-2 py-0.5 rounded-full">1 warning</span>
                     </div>
                 </template>
@@ -107,7 +108,7 @@
                 <div class="flex flex-col gap-2 overflow-hidden">
                     <div
                         v-for="(alert, i) in alerts.slice(0, 3)" :key="alert.id"
-                        :class="['rounded-lg px-3 py-2.5 border text-[12.5px] transition-all', alert.type === 'critical' ? 'bg-red-50 border-red-100' : 'bg-amber-50 border-amber-100', i === 2 ? 'opacity-mask' : '']"
+                        :class="['rounded-lg px-3 py-2.5 border text-[12.5px] transition-all', alert.type === 'critical' ? 'bg-red-50 border-red-100' : 'bg-amber-50 border-amber-100']"
                     >
                         <div class="flex items-center gap-1.5 mb-0.5">
                             <span :class="['w-1.5 h-1.5 rounded-full flex-shrink-0', alert.type === 'critical' ? 'bg-red-400' : 'bg-amber-400']"></span>
@@ -162,13 +163,14 @@ const chartBars = Array.from({ length: 48 }, (_, i) => ({
 const alerts = [
     { id: 1, type: 'critical', message: 'Temperature exceeded 40°C threshold', node: 'NODE-002', time: '5m ago' },
     { id: 2, type: 'warning',  message: 'Signal RSSI below -110 dBm', node: 'NODE-002', time: '18m ago' },
-    { id: 3, type: 'warning',  message: 'Signal RSSI below -110 dBm', node: 'NODE-002', time: '25m ago' },
+    { id: 3, type: 'critical', message: 'Node is offline', node: 'NODE-003', time: '25m ago' },
 ]
 
 const nodes = [
-    { id: 'N-001', name: 'Server Room',  temp: 23.1, status: 'online',  lastSeen: 'Just now', spark: '0,18 10,14 20,16 32,10 44,13 54,8 64,12' },
-    { id: 'N-002', name: 'Battery Array',    temp: 19.8, status: 'warning',  lastSeen: '1m ago',   spark: '0,14 10,16 20,12 32,18 44,14 54,16 64,13' },
-    // { id: 'N-001', name: 'Greenhouse Alpha',  temp: 23.1, status: 'online',  lastSeen: 'Just now', spark: '0,18 10,14 20,16 32,10 44,13 54,8 64,12' },
+    { id: 'N-001', name: 'Server Room',          temp: 23.1, status: 'online',  lastSeen: 'Just now', spark: '0,18 10,14 20,16 32,10 44,13 54,8  64,12' },
+    { id: 'N-002', name: 'Battery Array',        temp: 19.8, status: 'warning', lastSeen: '1m ago',   spark: '0,14 10,16 20,12 32,18 44,14 54,16 64,13' },
+    { id: 'N-003', name: 'Solar Array',          temp: 0,    status: 'offline', lastSeen: '2h ago',   spark: '0,12 10,12 20,12 32,12 44,12 54,12 64,12' },
+    // { id: 'N-001', name: 'Greenhouse Alpha',  temp: 23.1, status: 'online',  lastSeen: 'Just now', spark: '0,18 10,14 20,16 32,10 44,13 54,8  64,12' },
     // { id: 'N-002', name: 'Warehouse East',    temp: 19.8, status: 'online',  lastSeen: '1m ago',   spark: '0,14 10,16 20,12 32,18 44,14 54,16 64,13' },
     // { id: 'N-003', name: 'Rooftop Sensor',    temp: 40.2, status: 'warning', lastSeen: '2m ago',   spark: '0,20 10,18 20,15 32,12 44,8  54,4  64,2'  },
     // { id: 'N-004', name: 'Server Room',       temp: 22.5, status: 'online',  lastSeen: '1m ago',   spark: '0,12 10,13 20,12 32,14 44,12 54,13 64,12' },

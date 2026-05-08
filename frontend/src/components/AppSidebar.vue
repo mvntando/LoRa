@@ -80,13 +80,13 @@
             <div class="flex items-center justify-between mb-1.5">
                 <span class="text-[11px] text-[#6b6a65] font-500">Network</span>
                 <span class="flex items-center gap-1 text-[11px] text-[#22c55e] font-500">
-                    <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse"></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#22c55e]"></span>
                     Live
                 </span>
             </div>
             <div class="flex items-center justify-between text-[11px] text-[#a09f99]">
                 <span>Nodes online</span>
-                <span class="font-mono font-500 text-[#1c1c1a]">2 / 2</span>
+                <span class="font-mono font-500 text-[#1c1c1a]">2 / 3</span>
             </div>
             <div class="mt-2 h-1 rounded-full bg-[#e4e2db] overflow-hidden">
                 <div class="h-full w-4/5 rounded-full bg-[#1a7f72] transition-all"></div>
@@ -150,9 +150,9 @@ const IconDocs = () => h('svg', { viewBox: '0 0 16 16', fill: 'none', stroke: 'c
 
 const mainNav = [
     { to: '/',         label: 'Dashboard', icon: IconDashboard },
-    { to: '/nodes',    label: 'Nodes',     icon: IconNodes,   badge: '2' },
+    { to: '/nodes',    label: 'Nodes',     icon: IconNodes,   badge: '3' },
     { to: '/history',  label: 'History',   icon: IconHistory },
-    { to: '/alerts',   label: 'Alerts',    icon: IconAlerts,  badge: '2' },
+    { to: '/alerts',   label: 'Alerts',    icon: IconAlerts,  badge: '3' },
     { to: '/map',      label: 'Map View',  icon: IconMap },
 ]
 
