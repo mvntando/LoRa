@@ -9,6 +9,7 @@ const routes = [
     { path: '/map',      name: 'map',       component: () => import('@/views/MapView.vue') },
     { path: '/settings', name: 'settings',  component: () => import('@/views/SettingsView.vue') },
     { path: '/docs',     name: 'docs',      component: () => import('@/views/DocsView.vue') },
+    { path: '/test',     name: 'test',       component: () => import('@/views/TestView.vue') },
 ]
 
 export default createRouter({

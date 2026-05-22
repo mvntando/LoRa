@@ -86,10 +86,10 @@
             </div>
             <div class="flex items-center justify-between text-[11px] text-[#a09f99]">
                 <span>Nodes online</span>
-                <span class="font-mono font-500 text-[#1c1c1a]">2 / 3</span>
+                <span class="font-mono font-500 text-[#1c1c1a]">1 / 2</span>
             </div>
             <div class="mt-2 h-1 rounded-full bg-[#e4e2db] overflow-hidden">
-                <div class="h-full w-4/5 rounded-full bg-[#1a7f72] transition-all"></div>
+                <div class="h-full w-1/2 rounded-full bg-[#1a7f72] transition-all"></div>
             </div>
         </div>
 
