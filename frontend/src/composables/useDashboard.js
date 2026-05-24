@@ -2,10 +2,7 @@ import { computed } from 'vue'
 import { useNodes } from '@/composables/useNodes'
 import { useAllRecords } from '@/composables/useAllRecords'
 import { nodeStatus, timeAgo } from '@/utils/time'
-
-const TEMP_CRITICAL   = 40
-const RSSI_WARNING    = -110
-const BATTERY_WARNING = 20
+import { useAlerts } from '@/composables/useAlerts'
 
 function avgOf(arr, key) {
     const valid = arr.filter(n => n[key] !== null)
@@ -68,25 +65,7 @@ export function useDashboard() {
     })
 
     // --- alerts ---
-    const alerts = computed(() => nodes.value.flatMap(node => {
-        const status = nodeStatus(node.lastSeen)
-        const time   = timeAgo(node.lastSeen)
-        const result = []
-
-        if (status === 'offline')
-            result.push({ type: 'critical', message: 'Node is offline', node: node.name, time })
-        if (node.lastTemp >= TEMP_CRITICAL)
-            result.push({ type: 'critical', message: `Temp exceeded ${TEMP_CRITICAL}°C`, node: node.name, time })
-        if (node.lastRssi <= RSSI_WARNING)
-            result.push({ type: 'warning', message: `RSSI below ${RSSI_WARNING} dBm`, node: node.name, time })
-        if (node.lastBattery <= BATTERY_WARNING)
-            result.push({ type: 'warning', message: 'Battery low', node: node.name, time })
-
-        return result
-    }))
-
-    const criticalCount = computed(() => alerts.value.filter(a => a.type === 'critical').length)
-    const warningCount  = computed(() => alerts.value.filter(a => a.type === 'warning').length)
+    const { alerts, criticalCount, warningCount } = useAlerts(nodes)
 
     return {
         nodes, allRecords, loading,

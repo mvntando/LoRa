@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between mb-5">
             <div>
                 <h2 class="text-[14px] font-600 text-[#1c1c1a]">Temperature Overview</h2>
-                <p class="text-[12px] text-[#a09f99] mt-0.5">Last {{ activeRange }} · All nodes</p>
+                <p class="text-[12px] text-[#a09f99] mt-0.5">Last {{ activeRange }} · {{ node }} </p>
             </div>
             <div class="flex gap-1">
                 <button
@@ -31,18 +31,20 @@ Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryS
 
 const props = defineProps({
     records:  { type: Array, default: () => [] },  // [{ temp, timestamp: Date, nodeId }]
+    node:     { type: String, default: 'All Nodes' },
 })
 
-const ranges     = ['1H', '6H', '24H']
+const ranges     = ['1H', '6H', '24H', '7D']
 const activeRange = ref('24H')
 const canvasEl   = ref(null)
 let chart        = null
 
 // --- bucketing config per range ---
 const rangeConfig = {
-    '1H':  { hours: 1,   bucketMin: 5  },
-    '6H':  { hours: 6,   bucketMin: 30 },
-    '24H': { hours: 24,  bucketMin: 60 },
+    '1H':  { hours: 1,   bucketMin: 5   },
+    '6H':  { hours: 6,   bucketMin: 30  },
+    '24H': { hours: 24,  bucketMin: 60  },
+    '7D':  { hours: 168, bucketMin: 180 },
 }
 
 function buildChartData(records, range) {

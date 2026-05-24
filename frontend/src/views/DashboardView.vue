@@ -82,11 +82,11 @@
                 <div class="flex flex-col gap-2 overflow-hidden">
                     <div
                         v-for="(alert, i) in alerts.slice(0, 3)" :key="i"
-                        :class="['rounded-lg px-3 py-2.5 border text-[12.5px] transition-all', alert.type === 'critical' ? 'bg-red-50 border-red-100' : 'bg-amber-50 border-amber-100']"
+                        :class="['rounded-lg px-3 py-2.5 border text-[12.5px] transition-all', alert.severity === 'critical' ? 'bg-red-50 border-red-100' : 'bg-amber-50 border-amber-100']"
                     >
                         <div class="flex items-center gap-1.5 mb-0.5">
-                            <span :class="['w-1.5 h-1.5 rounded-full flex-shrink-0', alert.type === 'critical' ? 'bg-red-400' : 'bg-amber-400']"></span>
-                            <span :class="['font-600 text-[11.5px] uppercase tracking-wide', alert.type === 'critical' ? 'text-red-500' : 'text-amber-500']">{{ alert.type }}</span>
+                            <span :class="['w-1.5 h-1.5 rounded-full flex-shrink-0', alert.severity === 'critical' ? 'bg-red-400' : 'bg-amber-400']"></span>
+                            <span :class="['font-600 text-[11.5px] uppercase tracking-wide', alert.severity === 'critical' ? 'text-red-500' : 'text-amber-500']">{{ alert.severity }}</span>
                             <span class="ml-auto font-mono text-[10.5px] text-[#a09f99]">{{ alert.time }}</span>
                         </div>
                         <p class="text-[#1c1c1a] font-400 leading-snug">{{ alert.message }}</p>
@@ -120,6 +120,7 @@
                 :key="node.id"
                 :node="node"
                 :records="allRecords.filter(r => r.nodeId === node.id)"
+                :showSpark="true"
                 @click="$router.push(`/nodes/${node.id}`)"
             />  
         </div>
@@ -139,7 +140,7 @@ const today = computed(() =>
 )
 
 const {
-    nodes, allRecords, loading,
+    nodes, allRecords, loading, error,
     onlineCount, onlineTrend,
     avgTemp, avgTempTrend,
     avgBattery, avgBatteryTrend,

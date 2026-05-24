@@ -28,5 +28,10 @@ dist-ssr
 *.sln
 *.sw?
 
+# Config files
+.env
+config.h
+
 # Other
 notes.txt
+backend/gateway/config.h

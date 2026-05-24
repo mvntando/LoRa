@@ -3,7 +3,7 @@
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-[11.5px] font-500 text-[#a09f99] uppercase tracking-wider">{{ label }}</p>
-                <p class="mt-1 text-2xl font-600 text-[#1c1c1a] leading-none tracking-tight">
+                <p class="mt-1 text-2xl font-600 leading-none tracking-tight" :class="valueClass">
                     {{ value }}
                     <span v-if="unit" class="text-sm font-400 text-[#a09f99] ml-0.5">{{ unit }}</span>
                 </p>
@@ -26,10 +26,11 @@
 
 <script setup>
 defineProps({
-    label:   { type: String, required: true },
-    value:   { type: [String, Number], required: true },
-    unit:    { type: String, default: '' },
-    trend:   { type: Number, default: undefined },
-    iconBg:  { type: String, default: 'bg-[#e8f5f3]' },
+    label:      { type: String, required: true },
+    value:      { type: [String, Number], required: true },
+    unit:       { type: String, default: '' },
+    trend:      { type: Number, default: undefined },
+    valueClass: { type: String, default: 'text-[#1c1c1a]' },
+    iconBg:     { type: String, default: 'bg-[#e8f5f3]' },
 })
 </script>
