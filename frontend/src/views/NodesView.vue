@@ -215,12 +215,14 @@
 import { ref, computed } from 'vue'
 import StatCard from '@/components/StatCard.vue'
 import NodeRow from '@/components/NodeRow.vue'
-import { useNodes } from '@/composables/useNodes'
+import { useNodeStore } from '@/stores/nodeStore'
+import { storeToRefs } from 'pinia'
 import { nodeStatus } from '@/utils/time'
 import { useNodeActions } from '@/composables/useNodeActions'
 import { useAlerts } from '@/composables/useAlerts'
 
-const { nodes, loading, error } = useNodes()
+const store = useNodeStore()
+const { nodes, loading, error } = storeToRefs(store)
 
 const search      = ref('')
 const activeFilter = ref('all')

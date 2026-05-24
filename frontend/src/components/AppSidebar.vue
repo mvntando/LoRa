@@ -97,7 +97,10 @@
 </template>
 
 <script setup>
-import { h } from 'vue'
+import { h, computed } from 'vue'
+import { useNodeStore } from '@/stores/nodeStore'
+
+const store = useNodeStore()
 
 // Inline SVG icon components
 const IconDashboard = () => h('svg', { viewBox: '0 0 16 16', fill: 'none', stroke: 'currentColor', 'stroke-width': '1.5', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, [
@@ -148,13 +151,13 @@ const IconDocs = () => h('svg', { viewBox: '0 0 16 16', fill: 'none', stroke: 'c
     h('path', { d: 'M10 1v3.5H14l-4-3.5z' }),
 ])
 
-const mainNav = [
-    { to: '/',         label: 'Dashboard', icon: IconDashboard },
-    { to: '/nodes',    label: 'Nodes',     icon: IconNodes,   badge: '3' },
-    { to: '/history',  label: 'History',   icon: IconHistory },
-    { to: '/alerts',   label: 'Alerts',    icon: IconAlerts,  badge: '3' },
-    { to: '/map',      label: 'Map View',  icon: IconMap },
-]
+const mainNav = computed(() => [
+    { to: '/',        label: 'Dashboard', icon: IconDashboard },
+    { to: '/nodes',   label: 'Nodes',     icon: IconNodes,  badge: store.nodes.length || null },
+    { to: '/history', label: 'History',   icon: IconHistory },
+    { to: '/alerts',  label: 'Alerts',    icon: IconAlerts, badge: store.alertCount || null },
+    { to: '/map',     label: 'Map View',  icon: IconMap },
+])
 
 const systemNav = [
     { to: '/settings', label: 'Settings', icon: IconSettings },

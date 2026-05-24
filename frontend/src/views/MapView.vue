@@ -144,12 +144,14 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import L from 'leaflet'
-import { useNodes } from '@/composables/useNodes'
+import { useNodeStore } from '@/stores/nodeStore'
+import { storeToRefs } from 'pinia'
 import { nodeStatus, timeAgo } from '@/utils/time'
 import NodeRow from '@/components/NodeRow.vue'
 
-const router   = useRouter()
-const { nodes, loading } = useNodes()
+const router = useRouter()
+const store = useNodeStore()
+const { nodes, loading } = storeToRefs(store)
 
 // Store only the ID — `selected` is a computed that always reads the live node from `nodes`
 const selectedId = ref(null)

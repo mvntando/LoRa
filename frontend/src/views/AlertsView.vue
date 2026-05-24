@@ -124,10 +124,12 @@
 <script setup>
 import { computed } from 'vue'
 import StatCard from '@/components/StatCard.vue'
-import { useNodes }  from '@/composables/useNodes'
+import { useNodeStore } from '@/stores/nodeStore'
+import { storeToRefs } from 'pinia'
 import { useAlerts } from '@/composables/useAlerts'
 
-const { nodes } = useNodes()
+const store = useNodeStore()
+const { nodes } = storeToRefs(store)
 const { alerts, filtered, criticalCount, warningCount, filter, search } = useAlerts(nodes)
 
 const filterOptions = computed(() => [

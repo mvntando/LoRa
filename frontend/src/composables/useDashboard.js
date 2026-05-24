@@ -1,5 +1,6 @@
 import { computed } from 'vue'
-import { useNodes } from '@/composables/useNodes'
+import { useNodeStore } from '@/stores/nodeStore'
+import { storeToRefs } from 'pinia'
 import { useAllRecords } from '@/composables/useAllRecords'
 import { nodeStatus, timeAgo } from '@/utils/time'
 import { useAlerts } from '@/composables/useAlerts'
@@ -23,7 +24,8 @@ function trendPercent(current, previous) {
 }
 
 export function useDashboard() {
-    const { nodes, loading: nodesLoading } = useNodes()
+    const store = useNodeStore()
+    const { nodes, loading: nodesLoading } = storeToRefs(store)
     const { allRecords, loading: recordsLoading } = useAllRecords(24)
 
     const loading = computed(() => nodesLoading.value || recordsLoading.value)

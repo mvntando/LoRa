@@ -235,10 +235,12 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import MultiChart from '@/components/MultiChart.vue'
-import { useNodes } from '@/composables/useNodes'
+import { useNodeStore } from '@/stores/nodeStore'
+import { storeToRefs } from 'pinia'
 import { useNodeRecords } from '@/composables/useNodeRecords'
 
-const { nodes } = useNodes()
+const store = useNodeStore()
+const { nodes } = storeToRefs(store)
 
 // Controls
 const selectedNodeId = ref('')

@@ -90,7 +90,8 @@ import { computed, ref, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import StatCard from '@/components/StatCard.vue'
 import TempChart from '@/components/TempChart.vue'
-import { useNodes } from '@/composables/useNodes'
+import { useNodeStore } from '@/stores/nodeStore'
+import { storeToRefs } from 'pinia'
 import { useNodeRecords } from '@/composables/useNodeRecords'
 import { useAlerts } from '@/composables/useAlerts'
 import { nodeStatus, timeAgo } from '@/utils/time'
@@ -98,9 +99,10 @@ import { nodeStatus, timeAgo } from '@/utils/time'
 const route  = useRoute()
 const nodeId = ref(route.params.id)
 
-const { nodes, loading } = useNodes()
-const { records }        = useNodeRecords(nodeId)
-const { alerts }         = useAlerts(nodes)
+const store = useNodeStore()
+const { nodes, loading } = storeToRefs(store)
+const { records } = useNodeRecords(nodeId)
+const { alerts } = useAlerts(nodes)
 
 const nodeAlerts = computed(() => alerts.value.filter(a => a.nodeId === nodeId.value))
 

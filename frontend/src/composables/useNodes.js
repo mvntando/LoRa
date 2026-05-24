@@ -1,47 +1,49 @@
-import { ref, onUnmounted } from 'vue'
-import { collection, onSnapshot } from 'firebase/firestore'
-import { db } from '@/firebase'
+console.warn('[useNodes] This composable is deprecated. Use the `useNodeStore` Pinia store instead for better performance and reactivity.')
 
-/**
- * Reactive live listener for the `nodes` collection.
- * Each node doc maps to: { id, name, location, lastTemp, lastBattery, lastRssi, lastSeen }
- * `lastSeen` is converted from a Firestore Timestamp to a JS Date.
- */
-export function useNodes() {
-    const nodes   = ref([])
-    const loading = ref(true)
-    const error   = ref(null)
+// import { ref, onUnmounted } from 'vue'
+// import { collection, onSnapshot } from 'firebase/firestore'
+// import { db } from '@/firebase'
 
-    const unsub = onSnapshot(
-        collection(db, 'nodes'),
-        (snapshot) => {
-            nodes.value = snapshot.docs.map(doc => {
-                const d = doc.data()
-                return {
-                    id:          doc.id,
-                    name:        d.name        ?? doc.id,
-                    location:    d.location    ?? '—',
-                    lastTemp:    d.lastTemp     ?? null,
-                    lastBattery: d.lastBattery  ?? null,
-                    lastRssi:    d.lastRssi     ?? null,
-                    // Firestore Timestamp -> JS Date
-                    lastSeen:    d.lastSeen?.toDate?.() ?? null,
-                    lat:         d.lat ?? null,
-                    lng:         d.lng ?? null,
+// /**
+//  * Reactive live listener for the `nodes` collection.
+//  * Each node doc maps to: { id, name, location, lastTemp, lastBattery, lastRssi, lastSeen }
+//  * `lastSeen` is converted from a Firestore Timestamp to a JS Date.
+//  */
+// export function useNodes() {
+//     const nodes   = ref([])
+//     const loading = ref(true)
+//     const error   = ref(null)
 
-                }
-            })
-            loading.value = false
-        },
-        (err) => {
-            console.error('[useNodes]', err)
-            error.value   = err.message
-            loading.value = false
-        }
-    )
+//     const unsub = onSnapshot(
+//         collection(db, 'nodes'),
+//         (snapshot) => {
+//             nodes.value = snapshot.docs.map(doc => {
+//                 const d = doc.data()
+//                 return {
+//                     id:          doc.id,
+//                     name:        d.name        ?? doc.id,
+//                     location:    d.location    ?? '—',
+//                     lastTemp:    d.lastTemp     ?? null,
+//                     lastBattery: d.lastBattery  ?? null,
+//                     lastRssi:    d.lastRssi     ?? null,
+//                     // Firestore Timestamp -> JS Date
+//                     lastSeen:    d.lastSeen?.toDate?.() ?? null,
+//                     lat:         d.lat ?? null,
+//                     lng:         d.lng ?? null,
 
-    // Auto-cleanup when the component using this composable is unmounted
-    onUnmounted(unsub)
+//                 }
+//             })
+//             loading.value = false
+//         },
+//         (err) => {
+//             console.error('[useNodes]', err)
+//             error.value   = err.message
+//             loading.value = false
+//         }
+//     )
 
-    return { nodes, loading, error }
-}
+//     // Auto-cleanup when the component using this composable is unmounted
+//     onUnmounted(unsub)
+
+//     return { nodes, loading, error }
+// }

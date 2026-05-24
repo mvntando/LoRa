@@ -6,7 +6,7 @@ import { useThresholds } from '@/composables/useThresholds'
  * Derives alerts by watching a nodes ref passed in by the caller.
  * Thresholds are read live from Firestore via useThresholds().
  *
- * @param {import('vue').Ref<Array>} nodes - ref returned by useNodes()
+ * @param {import('vue').Ref<Array>} nodes - ref returned by useNodeStore()
  */
 export function useAlerts(nodes) {
     const alerts = ref([])
