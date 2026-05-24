@@ -269,7 +269,7 @@ const datasets = ref([
 function selectRange(r) {
     activeRange.value    = r.label
     hoursBack.value      = r.hours
-    customFromDate.value = null  // clears custom range → composable switches back to live
+    customFromDate.value = null  // clears custom range -> composable switches back to live
     customToDate.value   = null
     page.value           = 1
 }

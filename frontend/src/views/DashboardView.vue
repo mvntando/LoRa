@@ -100,8 +100,8 @@
         </div>
 
         <!-- Nodes table -->
-        <div class="bg-white rounded-xl border border-[#e4e2db] p-5">
-            <div class="flex items-center justify-between mb-4">
+        <div class="bg-white rounded-xl border border-[#e4e2db] py-5">
+            <div class="flex items-center justify-between mb-4 px-5">
                 <h2 class="text-[14px] font-600 text-[#1c1c1a]">Node Status</h2>
                 <router-link to="/nodes" class="text-[11px] text-[#1a7f72] font-500 hover:underline">Manage nodes</router-link>
             </div>
@@ -119,10 +119,10 @@
                 v-for="node in nodes"
                 :key="node.id"
                 :node="node"
+                :columns="['status', 'id', 'name', 'temp', 'spark', 'lastSeen', 'arrow']"
                 :records="allRecords.filter(r => r.nodeId === node.id)"
-                :showSpark="true"
                 @click="$router.push(`/nodes/${node.id}`)"
-            />  
+            />
         </div>
 
     </div>

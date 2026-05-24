@@ -130,10 +130,9 @@
                 v-for="node in filteredNodes"
                 :key="node.id"
                 :node="node"
-                :records="[]"
-                :showExtras="true"
+                :columns="['status', 'id', 'name', 'location', 'temp', 'battery', 'rssi', 'lastSeen', 'arrow']"
                 @click="$router.push(`/nodes/${node.id}`)"
-                />
+            />
             </div>
 
         <p v-if="error" class="mt-4 text-sm text-red-500 bg-red-50 border border-red-100 rounded-lg px-4 py-3">

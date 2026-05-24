@@ -1,17 +1,10 @@
 import { ref, computed, watch } from 'vue'
 import { nodeStatus, timeAgo } from '@/utils/time'
-
-export const THRESHOLDS = {
-    tempCritical:    40,    // °C
-    tempWarning:     30,    // °C
-    rssiCritical:   -110,   // dBm
-    rssiWarning:    -100,   // dBm
-    batteryCritical: 15,    // %
-    batteryWarning:  20,    // %
-}
+import { useThresholds } from '@/composables/useThresholds'
 
 /**
  * Derives alerts by watching a nodes ref passed in by the caller.
+ * Thresholds are read live from Firestore via useThresholds().
  *
  * @param {import('vue').Ref<Array>} nodes - ref returned by useNodes()
  */
@@ -20,7 +13,9 @@ export function useAlerts(nodes) {
     const filter = ref('all')
     const search = ref('')
 
-    watch(nodes, (nodeList) => {
+    const { thresholds } = useThresholds()
+
+    watch([nodes, thresholds], ([nodeList, t]) => {
         alerts.value = nodeList.flatMap(node => {
             const status = nodeStatus(node.lastSeen)
             const time   = timeAgo(node.lastSeen)
@@ -41,23 +36,23 @@ export function useAlerts(nodes) {
 
             // Temperature
             if (node.lastTemp !== null) {
-                if (node.lastTemp >= THRESHOLDS.tempCritical)
+                if (node.lastTemp >= t.tempMax)
                     result.push({
                         id:       `${node.id}-temp`,
                         severity: 'critical',
                         type:     'temp',
-                        message:  `Temp exceeded ${THRESHOLDS.tempCritical}°C`,
+                        message:  `Temp exceeded ${t.tempMax}°C`,
                         node:     node.name,
                         nodeId:   node.id,
                         value:    `${node.lastTemp}°C`,
                         time,
                     })
-                else if (node.lastTemp >= THRESHOLDS.tempWarning)
+                else if (node.lastTemp <= t.tempMin)
                     result.push({
                         id:       `${node.id}-temp`,
                         severity: 'warning',
                         type:     'temp',
-                        message:  `Temp above ${THRESHOLDS.tempWarning}°C`,
+                        message:  `Temp below ${t.tempMin}°C`,
                         node:     node.name,
                         nodeId:   node.id,
                         value:    `${node.lastTemp}°C`,
@@ -66,56 +61,30 @@ export function useAlerts(nodes) {
             }
 
             // RSSI
-            if (node.lastRssi !== null) {
-                if (node.lastRssi <= THRESHOLDS.rssiCritical)
-                    result.push({
-                        id:       `${node.id}-rssi`,
-                        severity: 'critical',
-                        type:     'rssi',
-                        message:  `RSSI below ${THRESHOLDS.rssiCritical} dBm`,
-                        node:     node.name,
-                        nodeId:   node.id,
-                        value:    `${node.lastRssi} dBm`,
-                        time,
-                    })
-                else if (node.lastRssi <= THRESHOLDS.rssiWarning)
-                    result.push({
-                        id:       `${node.id}-rssi`,
-                        severity: 'warning',
-                        type:     'rssi',
-                        message:  `RSSI below ${THRESHOLDS.rssiWarning} dBm`,
-                        node:     node.name,
-                        nodeId:   node.id,
-                        value:    `${node.lastRssi} dBm`,
-                        time,
-                    })
-            }
+            if (node.lastRssi !== null && node.lastRssi <= t.rssiMin)
+                result.push({
+                    id:       `${node.id}-rssi`,
+                    severity: node.lastRssi <= t.rssiMin - 10 ? 'critical' : 'warning',
+                    type:     'rssi',
+                    message:  `RSSI below ${t.rssiMin} dBm`,
+                    node:     node.name,
+                    nodeId:   node.id,
+                    value:    `${node.lastRssi} dBm`,
+                    time,
+                })
 
             // Battery
-            if (node.lastBattery !== null) {
-                if (node.lastBattery <= THRESHOLDS.batteryCritical)
-                    result.push({
-                        id:       `${node.id}-battery`,
-                        severity: 'critical',
-                        type:     'battery',
-                        message:  `Battery critical (${THRESHOLDS.batteryCritical}%)`,
-                        node:     node.name,
-                        nodeId:   node.id,
-                        value:    `${node.lastBattery}%`,
-                        time,
-                    })
-                else if (node.lastBattery <= THRESHOLDS.batteryWarning)
-                    result.push({
-                        id:       `${node.id}-battery`,
-                        severity: 'warning',
-                        type:     'battery',
-                        message:  `Battery low (${THRESHOLDS.batteryWarning}%)`,
-                        node:     node.name,
-                        nodeId:   node.id,
-                        value:    `${node.lastBattery}%`,
-                        time,
-                    })
-            }
+            if (node.lastBattery !== null && node.lastBattery <= t.batteryMin)
+                result.push({
+                    id:       `${node.id}-battery`,
+                    severity: node.lastBattery <= t.batteryMin / 2 ? 'critical' : 'warning',
+                    type:     'battery',
+                    message:  `Battery low (≤${t.batteryMin}%)`,
+                    node:     node.name,
+                    nodeId:   node.id,
+                    value:    `${node.lastBattery}%`,
+                    time,
+                })
 
             return result
         })

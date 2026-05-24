@@ -24,8 +24,11 @@ export function useNodes() {
                     lastTemp:    d.lastTemp     ?? null,
                     lastBattery: d.lastBattery  ?? null,
                     lastRssi:    d.lastRssi     ?? null,
-                    // Firestore Timestamp → JS Date
+                    // Firestore Timestamp -> JS Date
                     lastSeen:    d.lastSeen?.toDate?.() ?? null,
+                    lat:         d.lat ?? null,
+                    lng:         d.lng ?? null,
+
                 }
             })
             loading.value = false
