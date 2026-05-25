@@ -1,6 +1,8 @@
 QUICK READ:
 LORANET DASHBOARD — WIRING NOTES
 =================================
+
+**Live app:** [lo-ranet.vercel.app](https://lo-ranet.vercel.app)
  
 DATA FLOW
 ---------
