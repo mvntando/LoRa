@@ -74,7 +74,11 @@
 
 <script setup>
 import { computed, ref, watch, onUnmounted } from 'vue'
+import { useNodeStore } from '@/stores/nodeStore'
 import { timeAgo, nodeStatus } from '@/utils/time'
+
+const store      = useNodeStore()
+const thresholds = computed(() => store.thresholds)
 
 const props = defineProps({
     node:    { type: Object, required: true },
@@ -86,7 +90,7 @@ const props = defineProps({
 const has = (col) => props.columns.includes(col)
 
 // Status
-const status = computed(() => nodeStatus(props.node.lastSeen))
+const status = computed(() => nodeStatus(props.node.lastSeen, thresholds.value.offlineMin))
 
 const statusDotColor = computed(() => ({
     online:  'bg-[#22c55e]',
@@ -97,17 +101,18 @@ const statusDotColor = computed(() => ({
 const tempColor = computed(() => {
     const t = props.node.lastTemp
     if (t === null) return 'text-[#a09f99]'
-    if (t >= 35)    return 'text-red-500'
-    if (t >= 28)    return 'text-amber-500'
+    if (t >= thresholds.value.tempMax)        return 'text-red-500'
+    if (t >= thresholds.value.tempMax - 10)   return 'text-amber-500'
     return 'text-[#1c1c1a]'
 })
 
 // Battery bar color
 const batteryBarColor = computed(() => {
     const b = props.node.lastBattery
-    if (b === null || b >= 50) return 'bg-[#1a7f72]'
-    if (b >= 20)               return 'bg-amber-400'
-    return 'bg-red-400'
+    if (b === null)                            return 'bg-[#1a7f72]'
+    if (b <= thresholds.value.batteryMin)      return 'bg-red-400'
+    if (b <= thresholds.value.batteryMin + 10) return 'bg-amber-400'
+    return 'bg-[#1a7f72]'
 })
 
 // Sparkline (built from records prop, last 9 points)

@@ -32,7 +32,7 @@ export function useDashboard() {
 
     // --- nodes online ---
     const onlineCount = computed(() =>
-        nodes.value.filter(n => nodeStatus(n.lastSeen) === 'online').length
+        nodes.value.filter(n => nodeStatus(n.lastSeen, store.thresholds.offlineMin) === 'online').length
     )
     const onlineTrend = computed(() => {
         const prev = new Set(hourSlice(allRecords.value, 2, 1).map(r => r.nodeId)).size

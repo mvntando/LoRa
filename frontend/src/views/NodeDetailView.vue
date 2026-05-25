@@ -108,7 +108,7 @@ const nodeAlerts = computed(() => alerts.value.filter(a => a.nodeId === nodeId.v
 
 const node = computed(() => nodes.value.find(n => n.id === nodeId.value) ?? null)
 
-const status = computed(() => nodeStatus(node.value?.lastSeen))
+const status = computed(() => nodeStatus(node.value?.lastSeen, store.thresholds.offlineMin))
 
 const statusBadge = computed(() => ({
     online:  'bg-[#e8f5f3] text-[#1a7f72]',

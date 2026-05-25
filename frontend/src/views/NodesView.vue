@@ -222,13 +222,13 @@ import { useNodeActions } from '@/composables/useNodeActions'
 import { useAlerts } from '@/composables/useAlerts'
 
 const store = useNodeStore()
-const { nodes, loading, error } = storeToRefs(store)
+const { nodes, loading, error, thresholds } = storeToRefs(store)
 
 const search      = ref('')
 const activeFilter = ref('all')
 const sortBy      = ref('lastSeen')
 
-const onlineCount = computed(() => nodes.value.filter(n => nodeStatus(n.lastSeen) === 'online').length)
+const onlineCount = computed(() => nodes.value.filter(n => nodeStatus(n.lastSeen, thresholds.value.offlineMin) === 'online').length)
 const { alerts } = useAlerts()
 
 const avgTemp = computed(() => {
@@ -245,8 +245,8 @@ const avgBattery = computed(() => {
 
 const filters = computed(() => [
     { label: 'All',     value: 'all',     count: nodes.value.length },
-    { label: 'Online',  value: 'online',  count: nodes.value.filter(n => nodeStatus(n.lastSeen) === 'online').length },
-    { label: 'Offline', value: 'offline', count: nodes.value.filter(n => nodeStatus(n.lastSeen) === 'offline').length },
+    { label: 'Online',  value: 'online',  count: nodes.value.filter(n => nodeStatus(n.lastSeen, thresholds.value.offlineMin) === 'online').length },
+    { label: 'Offline', value: 'offline', count: nodes.value.filter(n => nodeStatus(n.lastSeen, thresholds.value.offlineMin) === 'offline').length },
 ])
 
 const filteredNodes = computed(() => {
@@ -254,7 +254,7 @@ const filteredNodes = computed(() => {
 
     // Status filter
     if (activeFilter.value !== 'all') {
-        list = list.filter(n => nodeStatus(n.lastSeen) === activeFilter.value)
+        list = list.filter(n => nodeStatus(n.lastSeen, thresholds.value.offlineMin) === activeFilter.value)
     }
 
     // Search

@@ -50,14 +50,18 @@ export const useNodeStore = defineStore('nodes', () => {
     }
 
     // --- Node status counts ---
-    const onlineCount  = computed(() => nodes.value.filter(n => nodeStatus(n.lastSeen) === 'online').length)
+    const onlineCount = computed(() =>
+        nodes.value.filter(n =>
+            nodeStatus(n.lastSeen, thresholds.value.offlineMin) === 'online'
+        ).length
+    )
 
     // --- Alert generation ---
     const alerts = ref([])
 
     watch([nodes, thresholds], ([nodeList, t]) => {
         alerts.value = nodeList.flatMap(node => {
-            const status = nodeStatus(node.lastSeen)
+            const status = nodeStatus(node.lastSeen, t.offlineMin)
             const time   = timeAgo(node.lastSeen)
             const result = []
 
@@ -96,7 +100,7 @@ export const useNodeStore = defineStore('nodes', () => {
     const alertCount    = computed(() => alerts.value.length)
 
     return {
-        nodes, loading, error, init,
+        nodes, loading, error, init, thresholds,
         onlineCount, alerts, criticalCount, alertCount,
     }
 })

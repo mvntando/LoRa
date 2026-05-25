@@ -40,7 +40,7 @@
                     <p class="font-mono text-[11px] text-[#a09f99]">{{ selected.id }}</p>
                     <p class="font-mono text-[12px] text-[#1c1c1a] mb-2">{{ selected.location }}</p>
                     <span :class="['text-[10.5px] font-500 px-2 py-0.5 rounded-full inline-block mb-2', statusBadgeClass(selected)]">
-                        {{ nodeStatus(selected.lastSeen) }}
+                        {{ nodeStatus(selected.lastSeen, thresholds.offlineMin) }}
                     </span>
 
                     <div class="space-y-1.5 text-[12px] border-t border-[#f0efe9] pt-2.5">
@@ -150,7 +150,7 @@ import NodeRow from '@/components/NodeRow.vue'
 
 const router = useRouter()
 const store = useNodeStore()
-const { nodes, loading } = storeToRefs(store)
+const { nodes, loading, thresholds } = storeToRefs(store)
 
 // Store only the ID — `selected` is a computed that always reads the live node from `nodes`
 const selectedId = ref(null)
@@ -240,7 +240,7 @@ function buildIcon(node) {
     const color = {
         online:  '#22c55e',
         offline: '#b4b2a9',
-    }[nodeStatus(node.lastSeen)] ?? '#b4b2a9'
+    }[nodeStatus(node.lastSeen, thresholds.value.offlineMin)] ?? '#b4b2a9'
 
     const label = node.id.replace('N-', '')
 
@@ -263,7 +263,7 @@ function statusBadgeClass(node) {
     return {
         online:  'bg-[#e8f5f3] text-[#0f6e56]',
         offline: 'bg-[#f1efe8] text-[#5f5e5a]',
-    }[nodeStatus(node.lastSeen)] ?? 'bg-[#f1efe8] text-[#5f5e5a]'
+    }[nodeStatus(node.lastSeen, thresholds.value.offlineMin)] ?? 'bg-[#f1efe8] text-[#5f5e5a]'
 }
 </script>
 
