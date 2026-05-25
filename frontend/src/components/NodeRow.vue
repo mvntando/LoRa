@@ -90,7 +90,6 @@ const status = computed(() => nodeStatus(props.node.lastSeen))
 
 const statusDotColor = computed(() => ({
     online:  'bg-[#22c55e]',
-    warning: 'bg-[#f59e0b]',
     offline: 'bg-[#e4e2db]',
 }[status.value]))
 

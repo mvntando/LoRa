@@ -13,7 +13,7 @@ import AppSidebar from '@/components/AppSidebar.vue'
 import { useNodeStore } from '@/stores/nodeStore'
 
 const store = useNodeStore()
-store.init()  // single Firestore node listener for the whole app
+store.init()  // Firestore Node listener for the whole app
 </script>
 
 <style>

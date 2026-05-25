@@ -102,7 +102,7 @@ const nodeId = ref(route.params.id)
 const store = useNodeStore()
 const { nodes, loading } = storeToRefs(store)
 const { records } = useNodeRecords(nodeId)
-const { alerts } = useAlerts(nodes)
+const { alerts } = useAlerts()
 
 const nodeAlerts = computed(() => alerts.value.filter(a => a.nodeId === nodeId.value))
 
@@ -112,7 +112,6 @@ const status = computed(() => nodeStatus(node.value?.lastSeen))
 
 const statusBadge = computed(() => ({
     online:  'bg-[#e8f5f3] text-[#1a7f72]',
-    warning: 'bg-amber-50 text-amber-600',
     offline: 'bg-[#f5f4f1] text-[#a09f99]',
 }[status.value]))
 
@@ -150,7 +149,6 @@ const lastSeenLabel = computed(() => {
 
 const lastSeenColor = computed(() => ({
     online:  'text-[#1a7f72]',
-    warning: 'text-amber-500',
     offline: 'text-red-500',
 }[status.value] ?? 'text-[#1c1c1a]'))
 </script>

@@ -108,7 +108,7 @@
 <script setup>
 import { h } from 'vue'
 
-// ── Inline sub-components (keeps this file self-contained) ──────────────────
+// Inline sub-components
 
 const SectionHeader = {
     props: ['number', 'title'],
@@ -170,7 +170,7 @@ const DocTable = {
     }
 }
 
-// ── Data ────────────────────────────────────────────────────────────────────
+// Data
 
 const sections = [
     { id: 'dashboard', title: 'Dashboard Overview' },

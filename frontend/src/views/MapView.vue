@@ -9,7 +9,6 @@
             </div>
             <div class="flex items-center gap-4 text-[12px] text-[#6b6a65]">
                 <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#22c55e] inline-block"></span>Online</span>
-                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b] inline-block"></span>Warning</span>
                 <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#b4b2a9] inline-block"></span>Offline</span>
             </div>
         </div>
@@ -240,7 +239,6 @@ function panTo(node) {
 function buildIcon(node) {
     const color = {
         online:  '#22c55e',
-        warning: '#f59e0b',
         offline: '#b4b2a9',
     }[nodeStatus(node.lastSeen)] ?? '#b4b2a9'
 
@@ -264,7 +262,6 @@ function buildIcon(node) {
 function statusBadgeClass(node) {
     return {
         online:  'bg-[#e8f5f3] text-[#0f6e56]',
-        warning: 'bg-amber-50 text-amber-700',
         offline: 'bg-[#f1efe8] text-[#5f5e5a]',
     }[nodeStatus(node.lastSeen)] ?? 'bg-[#f1efe8] text-[#5f5e5a]'
 }

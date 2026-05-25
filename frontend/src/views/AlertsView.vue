@@ -130,7 +130,7 @@ import { useAlerts } from '@/composables/useAlerts'
 
 const store = useNodeStore()
 const { nodes } = storeToRefs(store)
-const { alerts, filtered, criticalCount, warningCount, filter, search } = useAlerts(nodes)
+const { alerts, filtered, criticalCount, warningCount, filter, search } = useAlerts()
 
 const filterOptions = computed(() => [
     { value: 'all',      label: 'All',      dot: null,           count: alerts.value.length },

@@ -18,17 +18,13 @@ export function timeAgo(date) {
 
 /**
  * Returns a status string based on lastSeen date.
- * 'online'  < 5 min
- * 'warning' < 30 min
- * 'offline' >= 30 min or null
  *
  * @param {Date|null} date
- * @returns {'online'|'warning'|'offline'}
+ * @param {number} offlineMin Minutes after which a node is considered offline
+ * @returns {'online'|'offline'}
  */
-export function nodeStatus(date) {
+export function nodeStatus(date, offlineMin = 30) {
     if (!date) return 'offline'
     const minutes = (Date.now() - date.getTime()) / 60000
-    if (minutes < 5)  return 'online'
-    if (minutes < 30) return 'warning'
-    return 'offline'
+    return minutes < offlineMin ? 'online' : 'offline'
 }

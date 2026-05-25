@@ -229,7 +229,7 @@ const activeFilter = ref('all')
 const sortBy      = ref('lastSeen')
 
 const onlineCount = computed(() => nodes.value.filter(n => nodeStatus(n.lastSeen) === 'online').length)
-const { alerts } = useAlerts(nodes)
+const { alerts } = useAlerts()
 
 const avgTemp = computed(() => {
     const valid = nodes.value.filter(n => n.lastTemp !== null)
@@ -246,7 +246,6 @@ const avgBattery = computed(() => {
 const filters = computed(() => [
     { label: 'All',     value: 'all',     count: nodes.value.length },
     { label: 'Online',  value: 'online',  count: nodes.value.filter(n => nodeStatus(n.lastSeen) === 'online').length },
-    { label: 'Warning', value: 'warning', count: nodes.value.filter(n => nodeStatus(n.lastSeen) === 'warning').length },
     { label: 'Offline', value: 'offline', count: nodes.value.filter(n => nodeStatus(n.lastSeen) === 'offline').length },
 ])
 

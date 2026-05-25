@@ -67,7 +67,7 @@ export function useDashboard() {
     })
 
     // --- alerts ---
-    const { alerts, criticalCount, warningCount } = useAlerts(nodes)
+    const { alerts, criticalCount, warningCount } = useAlerts()
 
     return {
         nodes, allRecords, loading,

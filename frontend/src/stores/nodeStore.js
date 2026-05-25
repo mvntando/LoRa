@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { collection, onSnapshot } from 'firebase/firestore'
 import { db } from '@/firebase'
-import { nodeStatus } from '@/utils/time'
+import { nodeStatus, timeAgo } from '@/utils/time'
+import { useThresholds } from '@/composables/useThresholds'
 
 /**
  * Reactive live listener for the `nodes` collection.
@@ -15,10 +16,12 @@ export const useNodeStore = defineStore('nodes', () => {
     const error   = ref(null)
     let started   = false
 
+    // Thresholds
+    const { thresholds } = useThresholds()
+
     function init() {
         if (started) return
         started = true
-
         onSnapshot(
             collection(db, 'nodes'),
             (snapshot) => {
@@ -46,10 +49,54 @@ export const useNodeStore = defineStore('nodes', () => {
         )
     }
 
+    // --- Node status counts ---
     const onlineCount  = computed(() => nodes.value.filter(n => nodeStatus(n.lastSeen) === 'online').length)
-    const warningCount = computed(() => nodes.value.filter(n => nodeStatus(n.lastSeen) === 'warning').length)
-    const offlineCount = computed(() => nodes.value.filter(n => nodeStatus(n.lastSeen) === 'offline').length)
-    const alertCount   = computed(() => warningCount.value + offlineCount.value)
 
-    return { nodes, loading, error, init, onlineCount, warningCount, offlineCount, alertCount }
+    // --- Alert generation ---
+    const alerts = ref([])
+
+    watch([nodes, thresholds], ([nodeList, t]) => {
+        alerts.value = nodeList.flatMap(node => {
+            const status = nodeStatus(node.lastSeen)
+            const time   = timeAgo(node.lastSeen)
+            const result = []
+
+            if (status === 'offline')
+                result.push({ id: `${node.id}-offline`, severity: 'critical', type: 'offline',
+                    message: 'Node is offline', node: node.name, nodeId: node.id, value: null, time })
+
+            if (node.lastTemp !== null) {
+                if (node.lastTemp >= t.tempMax)
+                    result.push({ id: `${node.id}-temp`, severity: 'critical', type: 'temp',
+                        message: `Temp exceeded ${t.tempMax}°C`, node: node.name, nodeId: node.id,
+                        value: `${node.lastTemp}°C`, time })
+                else if (node.lastTemp <= t.tempMin)
+                    result.push({ id: `${node.id}-temp`, severity: 'warning', type: 'temp',
+                        message: `Temp below ${t.tempMin}°C`, node: node.name, nodeId: node.id,
+                        value: `${node.lastTemp}°C`, time })
+            }
+
+            if (node.lastRssi !== null && node.lastRssi <= t.rssiMin)
+                result.push({ id: `${node.id}-rssi`,
+                    severity: node.lastRssi <= t.rssiMin - 10 ? 'critical' : 'warning', type: 'rssi',
+                    message: `RSSI below ${t.rssiMin} dBm`, node: node.name, nodeId: node.id,
+                    value: `${node.lastRssi} dBm`, time })
+
+            if (node.lastBattery !== null && node.lastBattery <= t.batteryMin)
+                result.push({ id: `${node.id}-battery`,
+                    severity: node.lastBattery <= t.batteryMin / 2 ? 'critical' : 'warning', type: 'battery',
+                    message: `Battery low (≤${t.batteryMin}%)`, node: node.name, nodeId: node.id,
+                    value: `${node.lastBattery}%`, time })
+
+            return result
+        })
+    }, { immediate: true })
+
+    const criticalCount = computed(() => alerts.value.filter(a => a.severity === 'critical').length)
+    const alertCount    = computed(() => alerts.value.length)
+
+    return {
+        nodes, loading, error, init,
+        onlineCount, alerts, criticalCount, alertCount,
+    }
 })
