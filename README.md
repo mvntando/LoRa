@@ -6,6 +6,8 @@ Displays live temperature, battery, and signal readings from each node. Generate
 
 **Live app:** [lo-ranet.vercel.app](https://lo-ranet.vercel.app)
 
+![Dashboard](docs/images/dashboard.jpg)
+
 ## System Overview
 
 ```
